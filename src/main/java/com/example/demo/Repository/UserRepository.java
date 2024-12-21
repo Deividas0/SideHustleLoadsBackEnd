@@ -1,10 +1,10 @@
 package com.example.demo.Repository;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+
 
 @Repository
 public class UserRepository {
@@ -71,5 +71,41 @@ public class UserRepository {
 
             preparedStatement.executeUpdate();
         }
+    }
+
+    public String findPasswordByUsername(String username) throws SQLException {
+        final String sql = "SELECT password FROM user WHERE username = ?";
+
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            // If the username is found, return the hashed password
+            if (resultSet.next()) {
+                return resultSet.getString("password");
+            }
+        }
+        // If username is not found, return null
+        return null;
+    }
+
+    public int getUserId(String username) throws SQLException {
+        final String sql = "SELECT id FROM user WHERE username = ?";
+
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            preparedStatement.setString(1, username);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                return resultSet.getInt("id");
+            }
+        }
+
+        // If username is not found, return 0
+        return 0;
     }
 }

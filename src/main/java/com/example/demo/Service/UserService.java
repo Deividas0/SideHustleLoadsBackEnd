@@ -28,4 +28,16 @@ public class UserService {
         String hashedPassword = passwordEncoder.encode(password);
         userRepository.registration(username, email, hashedPassword);
     }
+
+    public int login(String username, String password) throws SQLException {
+
+        String storedPassword = userRepository.findPasswordByUsername(username);
+
+        if (storedPassword != null && passwordEncoder.matches(password, storedPassword)) {
+            return userRepository.getUserId(username);
+        }
+        return 0;  // Invalid username or password
+    }
+
+
 }

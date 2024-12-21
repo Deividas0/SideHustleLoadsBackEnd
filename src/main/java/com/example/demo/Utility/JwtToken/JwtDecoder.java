@@ -26,6 +26,7 @@ public class JwtDecoder {
                 .parseClaimsJws(jwt)
                 .getBody();
     }
+
     public String decodeUsernameFromToken(String token) {
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
@@ -37,5 +38,10 @@ public class JwtDecoder {
                 .getBody();
 
         return claims.getSubject(); // Extract the subject (username)
+    }
+
+    public Integer decodeUserIdFromToken(String token) {
+        Claims claims = decodeJwt(token.replace("Bearer ", ""));
+        return claims.get("id", Integer.class);
     }
 }

@@ -8,11 +8,22 @@ import lombok.*;
 public class Listing {
 
     private int id;
-    private int created_by_userid;
+    private int createdByUserid;
     private String title;
     private String description;
     private String pickUpLocation;
     private String deliveryLocation;
     private String mustDeliverBefore;
+    private String weight;
+    private String height;
+    private String width;
+    private String loadType;
 
+    public Listing(int createdByUserid, String title, String description, String pickUpLocation, String deliveryLocation) {
+        this.createdByUserid = createdByUserid;
+        this.title = title;
+        this.description = description;
+        this.pickUpLocation = pickUpLocation;
+        this.deliveryLocation = deliveryLocation;
+    }
 }

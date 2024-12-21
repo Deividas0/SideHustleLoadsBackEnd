@@ -17,22 +17,21 @@ public class JwtGenerator {
     @Value("${jwt.secret.key}")
     private String secretKey;
 
-    public String generateJwt(String username, String email, int id) {
+    public String generateJwt(String username, int id) {
         // Generate a signing key
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         // Set the current time and expiration time (1 day in milliseconds)
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
-        long oneDayInMillis = 1 * 24 * 60 * 60 * 1000; // 1 day
-        Date expiration = new Date(nowMillis + oneDayInMillis);
+        long oneYearInMillis = 365L * 24 * 60 * 60 * 1000; // 1 year
+        Date expiration = new Date(nowMillis + oneYearInMillis);
 
         // Create and sign the JWT token
         return Jwts.builder()
-                .setIssuer("GlobalExchange") // Set the token issuer
+                .setIssuer("Side Hustle Loads") // Set the token issuer
                 .setSubject(username) // Username as the subject
                 .claim("id", id) // Include user ID
-                .claim("email", email) // Include email
                 .setIssuedAt(now) // Set the issued time
                 .setExpiration(expiration) // Set the expiration time
                 .setId(UUID.randomUUID().toString()) // Add a unique identifier
