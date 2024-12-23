@@ -18,6 +18,8 @@ public class Listing {
     private String height;
     private String width;
     private String loadType;
+    private String base64Image;
+    private String createdAt;
 
     public Listing(int createdByUserid, String title, String description, String pickUpLocation, String deliveryLocation) {
         this.createdByUserid = createdByUserid;

@@ -20,7 +20,7 @@ public class EmailsService {
         String content = String.format(
                         "Welcome to Side Hustle Loads!\n\n" +
                         "We’re thrilled to have you join our community where you can " +
-                        "connect with people worldwide to request, offer, and exchange services.\n\n" +
+                        "find loads to deliver or place your loads for others.\n\n" +
                         "Feel free to explore and get started with your journey.\n\n" +
                         "Best regards,\n" +
                         "The Side Hustle Loads Team");
