@@ -44,4 +44,9 @@ public class JwtDecoder {
         Claims claims = decodeJwt(token.replace("Bearer ", ""));
         return claims.get("id", Integer.class);
     }
+
+    public String decodeUserCountryFromToken(String token) {
+        Claims claims = decodeJwt(token.replace("Bearer ", ""));
+        return claims.get("country", String.class);
+    }
 }

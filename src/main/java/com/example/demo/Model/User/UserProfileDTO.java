@@ -12,6 +12,7 @@ import java.sql.Timestamp;
 public class UserProfileDTO {
 
     private String username;
+    private String country;
     private Timestamp registrationDate;
     private int totalListingsCreated;
 }

@@ -38,12 +38,8 @@ public class UserController {
         if (userService.checkIfEmailExists(user.getEmail())) {
             return new ResponseEntity<>("Email already exists", HttpStatus.BAD_REQUEST);
         } else {
-            userService.registration(
-                    user.getUsername(),
-                    user.getEmail(),
-                    user.getPassword());
-            emailsService.registrationEmail(user.getEmail(),
-                    user.getUsername());
+            userService.registration(user.getUsername(), user.getEmail(), user.getCountry(), user.getPassword());
+            emailsService.registrationEmail(user.getEmail(), user.getUsername());
             return new ResponseEntity<>(HttpStatus.OK);
         }
     }
@@ -51,13 +47,14 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody UserLoginDTO userLoginDTO) throws SQLException {
         int id = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
+        String country = userService.getUserCountry(userLoginDTO.getUsername());
         Map<String, String> response = new HashMap<>();
 
         if (id == 0) {
             response.put("error", "Invalid username or password");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } else {
-            response.put("token", jwtGenerator.generateJwt(userLoginDTO.getUsername(), id));
+            response.put("token", jwtGenerator.generateJwt(userLoginDTO.getUsername(), id, country));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }

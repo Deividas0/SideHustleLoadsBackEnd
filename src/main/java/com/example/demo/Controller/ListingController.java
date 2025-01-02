@@ -2,6 +2,7 @@ package com.example.demo.Controller;
 
 import com.example.demo.Model.Listing.Listing;
 import com.example.demo.Service.ListingService;
+import com.example.demo.Service.UserService;
 import com.example.demo.Utility.ImageBBService;
 import com.example.demo.Utility.JwtToken.JwtDecoder;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,6 +25,9 @@ public class ListingController {
 
     @Autowired
     private ListingService listingService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private JwtDecoder jwtDecoder;
@@ -55,6 +59,8 @@ public class ListingController {
         listing.setCreatedByUserid(userId);
 
         listingService.newListing(listing);
+
+        userService.totalListingsCreatedIncrement(userId);
 
         return ResponseEntity.ok("Listing created successfully!");
     }
