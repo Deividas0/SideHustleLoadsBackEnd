@@ -1,5 +1,6 @@
 package com.example.demo.Service;
 
+import com.example.demo.Model.User.UserProfileDTO;
 import com.example.demo.Repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -45,6 +46,10 @@ public class UserService {
 
     public void totalListingsCreatedIncrement(int id) throws SQLException {
         userRepository.totalListingsCreatedIncrement(id);
+    }
+
+    public UserProfileDTO getUserProfileById(int id) throws SQLException {
+        return userRepository.getUserProfileById(id);
     }
 
 }

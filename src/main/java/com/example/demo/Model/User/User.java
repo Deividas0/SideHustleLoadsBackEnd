@@ -11,9 +11,12 @@ public class User {
 
     private int id;
     private String username;
+    private String country;
+    private String whatsapp;
+    private String viber;
     private String email;
     private String password;
-    private Timestamp registrationDate;
+    private String registrationDate;
     private int totalListingsCreated;
 
 }

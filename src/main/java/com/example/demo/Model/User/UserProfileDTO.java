@@ -13,6 +13,8 @@ public class UserProfileDTO {
 
     private String username;
     private String country;
-    private Timestamp registrationDate;
+    private String whatsapp;
+    private String viber;
+    private String registrationDate;
     private int totalListingsCreated;
 }

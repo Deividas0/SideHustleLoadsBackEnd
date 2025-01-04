@@ -20,6 +20,9 @@ public class UserMapper {
     public static UserProfileDTO toProfileDTO(User user) {
         return new UserProfileDTO(
                 user.getUsername(),
+                user.getCountry(),
+                user.getWhatsapp(),
+                user.getViber(),
                 user.getRegistrationDate(),
                 user.getTotalListingsCreated()
         );

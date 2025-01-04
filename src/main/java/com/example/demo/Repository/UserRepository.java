@@ -1,9 +1,13 @@
 package com.example.demo.Repository;
 
+import com.example.demo.Model.Listing.Listing;
+import com.example.demo.Model.User.UserProfileDTO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Repository
@@ -136,6 +140,35 @@ public class UserRepository {
             preparedStatement.setInt(1, id);
 
             preparedStatement.executeUpdate();
+        }
+    }
+
+    public UserProfileDTO getUserProfileById(int id) throws SQLException {
+        final String sql = "SELECT username, country, whatsapp, viber, registration_date, total_listings_created FROM user WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, id);
+
+            UserProfileDTO userProfileDTO = new UserProfileDTO();
+            try (ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (resultSet.next()) {
+
+                    userProfileDTO.setUsername(resultSet.getString("username"));
+                    userProfileDTO.setCountry(resultSet.getString("country"));
+                    userProfileDTO.setWhatsapp(resultSet.getString("whatsapp"));
+                    userProfileDTO.setViber(resultSet.getString("viber"));
+
+                    Timestamp timestamp = resultSet.getTimestamp("registration_date");
+                    LocalDateTime registrationDate = timestamp.toLocalDateTime();
+                    String formattedDate = registrationDate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss"));
+
+                    userProfileDTO.setRegistrationDate(formattedDate);
+
+                    userProfileDTO.setTotalListingsCreated(resultSet.getInt("total_listings_created"));
+                }
+            }
+            return userProfileDTO;
         }
     }
 }

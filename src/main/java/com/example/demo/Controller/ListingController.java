@@ -1,6 +1,7 @@
 package com.example.demo.Controller;
 
 import com.example.demo.Model.Listing.Listing;
+import com.example.demo.Model.User.UserProfileDTO;
 import com.example.demo.Service.ListingService;
 import com.example.demo.Service.UserService;
 import com.example.demo.Utility.ImageBBService;
@@ -16,7 +17,9 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Base64;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
@@ -66,7 +69,7 @@ public class ListingController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Listing> getListingById(
+    public ResponseEntity<Map<String, Object>> getListingById(
             @PathVariable int id,
             @RequestHeader("Authorization") String authorizationHeader) throws SQLException {
 
@@ -76,7 +79,11 @@ public class ListingController {
 
         Listing listing = listingService.getListingById(id);
         if (listing != null) {
-            return new ResponseEntity<>(listing, HttpStatus.OK);
+            UserProfileDTO userProfileDTO = userService.getUserProfileById(listing.getCreatedByUserid());
+            Map<String, Object> response = new HashMap<>();
+            response.put("listing", listing);
+            response.put("userProfileDTO", userProfileDTO);
+            return new ResponseEntity<>(response, HttpStatus.OK);
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
