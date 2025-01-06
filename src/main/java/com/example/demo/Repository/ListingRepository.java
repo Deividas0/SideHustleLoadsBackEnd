@@ -29,23 +29,25 @@ public class ListingRepository {
     }
 
     public void newListing(Listing listing) throws SQLException {
-        final String sql = "INSERT into listing (created_by_userid, title, description, pick_up_location, "
-                + "delivery_location, must_deliver_before, weight, height, width, load_type, image_url) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        final String sql = "INSERT into listing (created_by_userid, title, description, pick_up_country, delivery_country, "
+                + "pick_up_location, delivery_location, must_deliver_before, weight, height, width, load_type, image_url) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
             preparedStatement.setInt(1, listing.getCreatedByUserid());
             preparedStatement.setString(2, listing.getTitle());
             preparedStatement.setString(3, listing.getDescription());
-            preparedStatement.setString(4, listing.getPickUpLocation());
-            preparedStatement.setString(5, listing.getDeliveryLocation());
-            preparedStatement.setString(6, listing.getMustDeliverBefore());
-            preparedStatement.setString(7, listing.getWeight());
-            preparedStatement.setString(8, listing.getHeight());
-            preparedStatement.setString(9, listing.getWidth());
-            preparedStatement.setString(10, listing.getLoadType());
-            preparedStatement.setString(11, listing.getBase64Image());
+            preparedStatement.setString(4, listing.getPickUpCountry());
+            preparedStatement.setString(5, listing.getDeliveryCountry());
+            preparedStatement.setString(6, listing.getPickUpLocation());
+            preparedStatement.setString(7, listing.getDeliveryLocation());
+            preparedStatement.setString(8, listing.getMustDeliverBefore());
+            preparedStatement.setString(9, listing.getWeight());
+            preparedStatement.setString(10, listing.getHeight());
+            preparedStatement.setString(11, listing.getWidth());
+            preparedStatement.setString(12, listing.getLoadType());
+            preparedStatement.setString(13, listing.getBase64Image());
 
             preparedStatement.executeUpdate();
         }
@@ -66,6 +68,8 @@ public class ListingRepository {
                     listing.setCreatedByUserid(resultSet.getInt("created_by_userid"));
                     listing.setTitle(resultSet.getString("title"));
                     listing.setDescription(resultSet.getString("description"));
+                    listing.setPickUpCountry(resultSet.getString("pick_up_country"));
+                    listing.setDeliveryCountry(resultSet.getString("delivery_country"));
                     listing.setPickUpLocation(resultSet.getString("pick_up_location"));
                     listing.setDeliveryLocation(resultSet.getString("delivery_location"));
                     listing.setMustDeliverBefore(resultSet.getString("must_deliver_before"));
@@ -106,6 +110,8 @@ public class ListingRepository {
                     listing.setCreatedByUserid(resultSet.getInt("created_by_userid"));
                     listing.setTitle(resultSet.getString("title"));
                     listing.setDescription(resultSet.getString("description"));
+                    listing.setPickUpCountry(resultSet.getString("pick_up_country"));
+                    listing.setDeliveryCountry(resultSet.getString("delivery_country"));
                     listing.setPickUpLocation(resultSet.getString("pick_up_location"));
                     listing.setDeliveryLocation(resultSet.getString("delivery_location"));
                     listing.setMustDeliverBefore(resultSet.getString("must_deliver_before"));
@@ -142,6 +148,8 @@ public class ListingRepository {
                     listing.setCreatedByUserid(resultSet.getInt("created_by_userid"));
                     listing.setTitle(resultSet.getString("title"));
                     listing.setDescription(resultSet.getString("description"));
+                    listing.setPickUpCountry(resultSet.getString("pick_up_country"));
+                    listing.setDeliveryCountry(resultSet.getString("delivery_country"));
                     listing.setPickUpLocation(resultSet.getString("pick_up_location"));
                     listing.setDeliveryLocation(resultSet.getString("delivery_location"));
                     listing.setMustDeliverBefore(resultSet.getString("must_deliver_before"));
@@ -169,6 +177,8 @@ public class ListingRepository {
         String sql = "UPDATE listing SET " +
                 "title = ?, " +
                 "description = ?, " +
+                "pick_up_country = ?, " +
+                "delivery_country = ?, " +
                 "pick_up_location = ?, " +
                 "delivery_location = ?, " +
                 "must_deliver_before = ?, " +

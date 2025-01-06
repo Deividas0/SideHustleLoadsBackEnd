@@ -11,6 +11,8 @@ public class Listing {
     private int createdByUserid;
     private String title;
     private String description;
+    private String pickUpCountry;
+    private String deliveryCountry;
     private String pickUpLocation;
     private String deliveryLocation;
     private String mustDeliverBefore;
