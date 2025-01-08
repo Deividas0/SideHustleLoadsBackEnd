@@ -87,8 +87,6 @@ public class ListingRepository {
                     return listing;
                 }
             }
-
-
         }
         return null;
     }
@@ -134,16 +132,29 @@ public class ListingRepository {
         }
     }
 
-    public List<Listing> getAllListings() throws SQLException {
-        final String sql = "SELECT * FROM listing";
+    public List<Listing> getFilteredListings(String fromCountry, String toCountry) throws SQLException {
+        StringBuilder sql = new StringBuilder("SELECT * FROM listing WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (fromCountry != null && !fromCountry.isEmpty()) {
+            sql.append(" AND pick_up_country = ?");
+            params.add(fromCountry);
+        }
+        if (toCountry != null && !toCountry.isEmpty()) {
+            sql.append(" AND delivery_country = ?");
+            params.add(toCountry);
+        }
+
         List<Listing> listings = new ArrayList<>();
         try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+            PreparedStatement preparedStatement = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                preparedStatement.setObject(i + 1, params.get(i));
+            }
 
             try (ResultSet resultSet = preparedStatement.executeQuery()) {
                 while (resultSet.next()) {
                     Listing listing = new Listing();
-
                     listing.setId(resultSet.getInt("id"));
                     listing.setCreatedByUserid(resultSet.getInt("created_by_userid"));
                     listing.setTitle(resultSet.getString("title"));
@@ -167,11 +178,10 @@ public class ListingRepository {
                     listings.add(listing);
                 }
             }
-
-
         }
         return listings;
     }
+
 
     public boolean updateListing(Listing listing) throws SQLException {
         String sql = "UPDATE listing SET " +
@@ -225,6 +235,19 @@ public class ListingRepository {
 
             return rowsAffected > 0;
         }
+    }
+
+    public int getTotalListingsCount() throws SQLException {
+        final String sql = "SELECT COUNT(*) AS total FROM listing";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD);
+             PreparedStatement preparedStatement = connection.prepareStatement(sql);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            if (resultSet.next()) {
+                return resultSet.getInt("total");
+            }
+        }
+        return 0; // Return 0 if no listings are found
     }
 
 }

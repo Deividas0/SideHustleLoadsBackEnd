@@ -114,23 +114,6 @@ public class UserRepository {
         return 0;
     }
 
-    public String getUserCountry(String username) throws SQLException {
-        final String sql = "SELECT country FROM user WHERE username = ?";
-
-        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
-            PreparedStatement preparedStatement = connection.prepareStatement(sql);
-            preparedStatement.setString(1, username);
-
-            ResultSet resultSet = preparedStatement.executeQuery();
-
-            if (resultSet.next()) {
-                return resultSet.getString("country");
-            }
-        }
-
-        // If username is not found, return 0
-        return null;
-    }
 
     public void totalListingsCreatedIncrement(int id) throws SQLException {
         final String sql = "UPDATE user SET total_listings_created = total_listings_created + 1 WHERE id = ?";
@@ -144,7 +127,8 @@ public class UserRepository {
     }
 
     public UserProfileDTO getUserProfileById(int id) throws SQLException {
-        final String sql = "SELECT username, country, whatsapp, viber, registration_date, total_listings_created FROM user WHERE id = ?";
+        final String sql = "SELECT username, country, whatsapp, viber, registration_date, total_listings_created, "
+        + "balance, status FROM user WHERE id = ?";
         try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -166,9 +150,38 @@ public class UserRepository {
                     userProfileDTO.setRegistrationDate(formattedDate);
 
                     userProfileDTO.setTotalListingsCreated(resultSet.getInt("total_listings_created"));
+                    userProfileDTO.setBalance(resultSet.getInt("balance"));
+                    userProfileDTO.setStatus(resultSet.getString("status"));
                 }
             }
             return userProfileDTO;
         }
     }
+
+
+    public void updateUserProfile(int id, UserProfileDTO updatedProfile) throws SQLException {
+        final String sql = "UPDATE user SET country = ?, whatsapp = ?, viber = ? WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            // If there is no value null should be accepted
+            preparedStatement.setString(1, updatedProfile.getCountry() != null && !updatedProfile.getCountry().isEmpty()
+                    ? updatedProfile.getCountry()
+                    : null);
+            preparedStatement.setString(2, updatedProfile.getWhatsapp() != null && !updatedProfile.getWhatsapp().isEmpty()
+                    ? updatedProfile.getWhatsapp()
+                    : null);
+            preparedStatement.setString(3, updatedProfile.getViber() != null && !updatedProfile.getViber().isEmpty()
+                    ? updatedProfile.getViber()
+                    : null);
+            preparedStatement.setInt(4, id);
+
+            int rowsUpdated = preparedStatement.executeUpdate();
+            if (rowsUpdated == 0) {
+                throw new SQLException("No user found with the provided ID");
+            }
+        }
+    }
 }
+
+

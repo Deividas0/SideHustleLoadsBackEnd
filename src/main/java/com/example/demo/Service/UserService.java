@@ -12,10 +12,10 @@ import java.sql.SQLException;
 public class UserService {
 
     @Autowired
-    private UserRepository userRepository;
+    public UserRepository userRepository;
 
     @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    public BCryptPasswordEncoder passwordEncoder;
 
     public boolean checkIfUsernameExists(String username) throws SQLException {
         return userRepository.checkIfUsernameExists(username);
@@ -25,7 +25,7 @@ public class UserService {
         return userRepository.checkIfEmailExists(email);
     }
 
-    public void registration(String username, String email,  String country, String password) throws SQLException {
+    public void registration(String username, String email, String country, String password) throws SQLException {
         String hashedPassword = passwordEncoder.encode(password);
         userRepository.registration(username, email, country, hashedPassword);
     }
@@ -40,9 +40,6 @@ public class UserService {
         return 0;  // Invalid username or password
     }
 
-    public String getUserCountry(String username) throws SQLException {
-        return userRepository.getUserCountry(username);
-    }
 
     public void totalListingsCreatedIncrement(int id) throws SQLException {
         userRepository.totalListingsCreatedIncrement(id);
@@ -52,4 +49,8 @@ public class UserService {
         return userRepository.getUserProfileById(id);
     }
 
+    public void updateUserProfile(int id, UserProfileDTO updatedProfile) throws SQLException {
+        userRepository.updateUserProfile(id, updatedProfile);
+    }
 }
+

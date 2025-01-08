@@ -17,7 +17,7 @@ public class JwtGenerator {
     @Value("${jwt.secret.key}")
     private String secretKey;
 
-    public String generateJwt(String username, int id, String country) {
+    public String generateJwt(String username, int id) {
         // Generate a signing key
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
@@ -32,7 +32,6 @@ public class JwtGenerator {
                 .setIssuer("Side Hustle Loads") // Set the token issuer
                 .setSubject(username) // Username as the subject
                 .claim("id", id) // Include user ID
-                .claim("country", country) // Include user ID
                 .setIssuedAt(now) // Set the issued time
                 .setExpiration(expiration) // Set the expiration time
                 .setId(UUID.randomUUID().toString()) // Add a unique identifier

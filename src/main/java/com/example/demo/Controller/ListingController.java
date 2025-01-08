@@ -96,14 +96,23 @@ public class ListingController {
         return new ResponseEntity<>(listings, HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Listing>> getAllListings(@RequestHeader("Authorization") String authorizationHeader) throws SQLException {
-        if (authorizationHeader == null){
+    @PostMapping("/filter")
+    public ResponseEntity<List<Listing>> getFilteredListings(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody Map<String, String> filters
+    ) throws SQLException {
+        if (authorizationHeader == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
-        List<Listing> listings = listingService.getAllListings();
+
+        String fromCountry = filters.get("pickUpCountry");
+        String toCountry = filters.get("deliveryCountry");
+
+        List<Listing> listings = listingService.getFilteredListings(fromCountry, toCountry);
         return new ResponseEntity<>(listings, HttpStatus.OK);
     }
+
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteListingById(

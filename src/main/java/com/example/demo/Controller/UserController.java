@@ -2,8 +2,10 @@ package com.example.demo.Controller;
 
 import com.example.demo.Emails.EmailsService;
 import com.example.demo.Model.User.UserLoginDTO;
+import com.example.demo.Model.User.UserProfileDTO;
 import com.example.demo.Model.User.UserRegistrationDTO;
 import com.example.demo.Service.UserService;
+import com.example.demo.Utility.JwtToken.JwtDecoder;
 import com.example.demo.Utility.JwtToken.JwtGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -29,6 +31,9 @@ public class UserController {
     @Autowired
     private JwtGenerator jwtGenerator;
 
+    @Autowired
+    private JwtDecoder jwtDecoder;
+
 
     @PostMapping("/registration")
     public ResponseEntity<String> registration(@RequestBody UserRegistrationDTO user) throws SQLException {
@@ -47,15 +52,31 @@ public class UserController {
     @PostMapping("/login")
     public ResponseEntity<Map<String, String>> login(@RequestBody UserLoginDTO userLoginDTO) throws SQLException {
         int id = userService.login(userLoginDTO.getUsername(), userLoginDTO.getPassword());
-        String country = userService.getUserCountry(userLoginDTO.getUsername());
         Map<String, String> response = new HashMap<>();
 
         if (id == 0) {
             response.put("error", "Invalid username or password");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         } else {
-            response.put("token", jwtGenerator.generateJwt(userLoginDTO.getUsername(), id, country));
+            response.put("token", jwtGenerator.generateJwt(userLoginDTO.getUsername(), id));
             return new ResponseEntity<>(response, HttpStatus.OK);
         }
     }
+
+    @GetMapping("/profile")
+    public UserProfileDTO getUserProfileDTO(@RequestHeader("Authorization") String authorizationHeader) throws SQLException {
+        int id = jwtDecoder.decodeUserIdFromToken(authorizationHeader);
+        return userService.getUserProfileById(id);
+    }
+
+    @PutMapping("/profile")
+    public ResponseEntity<Void> updateUserProfile(
+            @RequestHeader("Authorization") String authorizationHeader,
+            @RequestBody UserProfileDTO updatedProfile
+    ) throws SQLException {
+        int id = jwtDecoder.decodeUserIdFromToken(authorizationHeader);
+        userService.updateUserProfile(id, updatedProfile);
+        return ResponseEntity.ok().build();
+    }
+
 }
