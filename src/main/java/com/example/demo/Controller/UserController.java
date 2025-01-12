@@ -18,7 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(origins = "http://127.0.0.1:5500", allowCredentials = "true")
+@CrossOrigin(origins = {"http://127.0.0.1:5500", "http://localhost:5500"}, allowCredentials = "true")
 @RequestMapping("/user")
 public class UserController {
 
@@ -78,5 +78,56 @@ public class UserController {
         userService.updateUserProfile(id, updatedProfile);
         return ResponseEntity.ok().build();
     }
+
+    @GetMapping("/balance")
+    public ResponseEntity<Map<String, Object>> getUserBalance(
+            @RequestHeader("Authorization") String authorizationHeader) throws SQLException {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        int id = jwtDecoder.decodeUserIdFromToken(authorizationHeader);
+        int balance = userService.getUserBalanceById(id);
+
+        return ResponseEntity.ok(Map.of("balance", balance));
+    }
+
+    @PostMapping("/vip")
+    public ResponseEntity<Map<String, Object>> purchaseVip(
+            @RequestBody Map<String, Integer> request,
+            @RequestHeader("Authorization") String authorizationHeader) throws SQLException {
+
+        if (authorizationHeader == null || !authorizationHeader.startsWith("Bearer ")) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
+        int id = jwtDecoder.decodeUserIdFromToken(authorizationHeader);
+
+        String currentStatus = userService.getUserStatusById(id);
+        if ("VIP".equalsIgnoreCase(currentStatus)) {
+            return ResponseEntity.ok(Map.of("message", "You are already a VIP user."));
+        }
+
+        int amount = request.get("amount");
+
+        if (amount != 4) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Invalid amount"));
+        }
+
+        // Check balance
+        int currentBalance = userService.getUserBalanceById(id);
+        if (currentBalance < amount) {
+            return ResponseEntity.badRequest().body(Map.of("error", "Insufficient balance"));
+        }
+
+        // Deduct the balance and update the status
+        userService.updateUserBalanceById(id, -amount);
+        userService.updateUserStatusToVipById(id);
+
+        return ResponseEntity.ok(Map.of("message", "VIP status purchased successfully"));
+    }
+
+
 
 }

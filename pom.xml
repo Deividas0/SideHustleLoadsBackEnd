@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.final</groupId>
-	<artifactId>Auction</artifactId>
+	<artifactId>SideHustleLoads</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>Auction</name>
 	<description>Final Project</description>
@@ -96,6 +96,12 @@
 			<artifactId>selenium-java</artifactId>
 			<version>4.27.0</version>
 		</dependency>
+		<dependency>
+			<groupId>com.stripe</groupId>
+			<artifactId>stripe-java</artifactId>
+			<version>28.2.0</version>
+		</dependency>
+
 		<dependency>
 			<groupId>io.github.bonigarcia</groupId>
 			<artifactId>webdrivermanager</artifactId>

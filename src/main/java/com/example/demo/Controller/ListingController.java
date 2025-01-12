@@ -73,7 +73,7 @@ public class ListingController {
             @PathVariable int id,
             @RequestHeader("Authorization") String authorizationHeader) throws SQLException {
 
-        if (authorizationHeader == null){
+        if (authorizationHeader == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -113,7 +113,6 @@ public class ListingController {
     }
 
 
-
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteListingById(
             @PathVariable int id,
@@ -129,7 +128,7 @@ public class ListingController {
         int createdById = listing.getCreatedByUserid();
 
 
-        if (userid != createdById){
+        if (userid != createdById) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
@@ -142,7 +141,32 @@ public class ListingController {
         }
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<String> updateListing(
+            @PathVariable int id,
+            @RequestBody Listing updatedListing,
+            @RequestHeader("Authorization") String authorizationHeader) {
 
+        if (authorizationHeader == null || authorizationHeader.isEmpty()) {
+            return new ResponseEntity<>("Unauthorized access. Missing token.", HttpStatus.UNAUTHORIZED);
+        }
 
+        if (updatedListing.getId() != id) {
+            return new ResponseEntity<>("Listing ID mismatch.", HttpStatus.BAD_REQUEST);
+        }
 
+        try {
+            boolean isUpdated = listingService.updateListing(updatedListing);
+
+            if (isUpdated) {
+                return new ResponseEntity<>("Listing updated successfully.", HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("Listing not found or not updated.", HttpStatus.NOT_FOUND);
+            }
+        } catch (SQLException e) {
+            return new ResponseEntity<>("Internal server error: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>("Invalid request: " + e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
 }

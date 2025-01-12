@@ -5,12 +5,14 @@ import com.example.demo.Service.UserService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.sql.SQLException;
 
 import static org.mockito.Mockito.*;
 
+@SpringBootTest
 public class UserServiceTest {
 
     private UserService userService;

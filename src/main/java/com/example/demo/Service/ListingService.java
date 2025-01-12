@@ -56,4 +56,11 @@ public class ListingService {
             }
         });
     }
+
+    public boolean updateListing(Listing listing) throws SQLException {
+        if (listing == null || listing.getId() <= 0) {
+            throw new IllegalArgumentException("Invalid listing data provided.");
+        }
+        return listingRepository.updateListing(listing);
+    }
 }

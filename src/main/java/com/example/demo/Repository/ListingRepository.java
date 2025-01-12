@@ -195,8 +195,7 @@ public class ListingRepository {
                 "weight = ?, " +
                 "height = ?, " +
                 "width = ?, " +
-                "load_type = ?, " +
-                "image_url = ? " +
+                "load_type = ? " +
                 "WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD);
@@ -204,24 +203,22 @@ public class ListingRepository {
 
             preparedStatement.setString(1, listing.getTitle());
             preparedStatement.setString(2, listing.getDescription());
-            preparedStatement.setString(3, listing.getPickUpLocation());
-            preparedStatement.setString(4, listing.getDeliveryLocation());
-            preparedStatement.setString(5, listing.getMustDeliverBefore());
-            preparedStatement.setString(6, listing.getWeight());
-            preparedStatement.setString(7, listing.getHeight());
-            preparedStatement.setString(8, listing.getWidth());
-            preparedStatement.setString(9, listing.getLoadType());
-            preparedStatement.setString(10, listing.getBase64Image());
-
-            preparedStatement.setInt(11, listing.getId());
+            preparedStatement.setString(3, listing.getPickUpCountry()); // Added pick_up_country
+            preparedStatement.setString(4, listing.getDeliveryCountry()); // Added delivery_country
+            preparedStatement.setString(5, listing.getPickUpLocation());
+            preparedStatement.setString(6, listing.getDeliveryLocation());
+            preparedStatement.setString(7, listing.getMustDeliverBefore());
+            preparedStatement.setString(8, listing.getWeight());
+            preparedStatement.setString(9, listing.getHeight());
+            preparedStatement.setString(10, listing.getWidth());
+            preparedStatement.setString(11, listing.getLoadType());
+            preparedStatement.setInt(12, listing.getId());
 
             int rowsUpdated = preparedStatement.executeUpdate();
-            if (rowsUpdated > 0) {
-                return true;
-            }
+            return rowsUpdated > 0;
         }
-        return false;
     }
+
 
     public boolean deleteListingById(int id) throws SQLException {
         String sql = "DELETE FROM listing WHERE id = ?";

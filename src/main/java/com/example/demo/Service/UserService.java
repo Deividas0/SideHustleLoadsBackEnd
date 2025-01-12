@@ -52,5 +52,29 @@ public class UserService {
     public void updateUserProfile(int id, UserProfileDTO updatedProfile) throws SQLException {
         userRepository.updateUserProfile(id, updatedProfile);
     }
+
+    public void updateUserBalanceById(int id, int balance) throws SQLException {
+        userRepository.updateUserBalanceById(id,balance);
+    }
+
+    public int getUserBalanceById(int id) throws SQLException {
+        return userRepository.getUserBalanceById(id);
+    }
+
+    public String getUserEmailById(int id) throws SQLException {
+        return userRepository.getUserEmailById(id);
+    }
+
+    public String getUserUsernameById(int id) throws SQLException {
+        return userRepository.getUserUsernameById(id);
+    }
+
+    public void updateUserStatusToVipById(int id) throws SQLException {
+        userRepository.updateUserStatusToVipById(id);
+    }
+
+    public String getUserStatusById(int id) throws SQLException {
+        return userRepository.getUserStatusById(id);
+    }
 }
 

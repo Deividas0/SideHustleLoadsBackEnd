@@ -128,7 +128,7 @@ public class UserRepository {
 
     public UserProfileDTO getUserProfileById(int id) throws SQLException {
         final String sql = "SELECT username, country, whatsapp, viber, registration_date, total_listings_created, "
-        + "balance, status FROM user WHERE id = ?";
+                + "balance, status FROM user WHERE id = ?";
         try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
             PreparedStatement preparedStatement = connection.prepareStatement(sql);
 
@@ -182,6 +182,92 @@ public class UserRepository {
             }
         }
     }
+
+    public void updateUserBalanceById(int id, int balance) throws SQLException {
+        final String sql = "UPDATE user SET balance = balance + ? WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, balance);
+            preparedStatement.setInt(2, id);
+
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public int getUserBalanceById(int id) throws SQLException {
+        final String sql = "SELECT balance FROM user WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getInt("balance");
+            }
+        }
+        return 0;
+    }
+
+    public String getUserEmailById(int id) throws SQLException {
+        final String sql = "SELECT email FROM user WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("email");
+            }
+        }
+        return "";
+    }
+
+    public String getUserUsernameById(int id) throws SQLException {
+        final String sql = "SELECT username FROM user WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("username");
+            }
+        }
+        return "";
+    }
+
+    public void updateUserStatusToVipById(int id) throws SQLException {
+        final String sql = "UPDATE user SET status = 'VIP' WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, id);
+
+            preparedStatement.executeUpdate();
+        }
+    }
+
+    public String getUserStatusById(int id) throws SQLException {
+        final String sql = "SELECT status FROM user WHERE id = ?";
+        try (Connection connection = DriverManager.getConnection(SQLURL, SQLUSERNAME, SQLPASSWORD)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(sql);
+
+            preparedStatement.setInt(1, id);
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                return resultSet.getString("status");
+            }
+        }
+        return "";
+    }
 }
+
+
+
 
 
