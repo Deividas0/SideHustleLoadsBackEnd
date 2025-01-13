@@ -30,14 +30,13 @@ public class JwtDecoder {
     public String decodeUsernameFromToken(String token) {
         Key key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
-        // Parse the JWT and validate its signature
         Claims claims = Jwts.parserBuilder()
-                .setSigningKey(key) // Use the signing key
+                .setSigningKey(key)
                 .build()
-                .parseClaimsJws(token.replace("Bearer ", "")) // Remove "Bearer " prefix if present
+                .parseClaimsJws(token.replace("Bearer ", ""))
                 .getBody();
 
-        return claims.getSubject(); // Extract the subject (username)
+        return claims.getSubject();
     }
 
     public Integer decodeUserIdFromToken(String token) {

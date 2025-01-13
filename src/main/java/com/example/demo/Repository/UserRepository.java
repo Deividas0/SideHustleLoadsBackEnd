@@ -87,12 +87,10 @@ public class UserRepository {
 
             ResultSet resultSet = preparedStatement.executeQuery();
 
-            // If the username is found, return the hashed password
             if (resultSet.next()) {
                 return resultSet.getString("password");
             }
         }
-        // If username is not found, return null
         return null;
     }
 
@@ -110,7 +108,6 @@ public class UserRepository {
             }
         }
 
-        // If username is not found, return 0
         return 0;
     }
 

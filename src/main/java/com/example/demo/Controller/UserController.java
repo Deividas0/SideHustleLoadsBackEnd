@@ -121,7 +121,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("error", "Insufficient balance"));
         }
 
-        // Deduct the balance and update the status
         userService.updateUserBalanceById(id, -amount);
         userService.updateUserStatusToVipById(id);
 

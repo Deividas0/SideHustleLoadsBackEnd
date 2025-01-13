@@ -41,7 +41,7 @@ public class PaymentController {
         }
 
         int userId = jwtDecoder.decodeUserIdFromToken(authorizationHeader);
-        String token = authorizationHeader.substring(7); // Extract token
+        String token = authorizationHeader.substring(7);
         Stripe.apiKey = stripeSecretKey;
 
         try {
@@ -52,14 +52,14 @@ public class PaymentController {
                     .setSuccessUrl("http://localhost:5500/success.html?session_id={CHECKOUT_SESSION_ID}")
                     .setCancelUrl("http://localhost:5500/cancel.html")
                     .putMetadata("Token", authorizationHeader)
-                    .putMetadata("userId", String.valueOf(userId)) // Add userId to metadata
+                    .putMetadata("userId", String.valueOf(userId))
                     .addLineItem(
                             SessionCreateParams.LineItem.builder()
                                     .setQuantity(1L)
                                     .setPriceData(
                                             SessionCreateParams.LineItem.PriceData.builder()
                                                     .setCurrency("eur")
-                                                    .setUnitAmount(Long.parseLong(amount) * 100) // Convert to cents
+                                                    .setUnitAmount(Long.parseLong(amount) * 100)
                                                     .setProductData(
                                                             SessionCreateParams.LineItem.PriceData.ProductData.builder()
                                                                     .setName("Account Top-Up")
@@ -95,24 +95,19 @@ public class PaymentController {
             Session session = Session.retrieve(sessionId);
             String Token = session.getMetadata().get("jwt");
 
-            // Validate and retrieve userId from metadata
             if (session.getMetadata().get("userId") == null) {
                 throw new IllegalArgumentException("User ID is missing in the Stripe session metadata.");
             }
             int id = Integer.parseInt(session.getMetadata().get("userId"));
 
-            // Retrieve and convert the amount
-            int amount = (int) (session.getAmountTotal() / 100); // Convert to EUR
+            int amount = (int) (session.getAmountTotal() / 100);
 
-            // Update user balance
             userService.updateUserBalanceById(id, amount);
 
-            // Send success email
             String recipientEmail = userService.getUserEmailById(id);
             String username = userService.getUserUsernameById(id);
             emailsService.successfulTopUpEmail(recipientEmail, username, amount);
 
-            // Respond with the updated balance
             int newBalance = userService.getUserBalanceById(id);
             return ResponseEntity.ok(Map.of("newBalance", newBalance));
 

@@ -17,7 +17,6 @@ public class EmailsRepository {
 
     private final SendGrid sendGrid;
 
-    // Inject the API key from application.properties
     public EmailsRepository(@Value("${sendgrid.api.key}") String apiKey) {
         this.sendGrid = new SendGrid(apiKey);
     }

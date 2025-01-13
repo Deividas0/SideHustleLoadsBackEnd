@@ -37,7 +37,7 @@ public class UserService {
         if (storedPassword != null && passwordEncoder.matches(password, storedPassword)) {
             return userRepository.getUserId(username);
         }
-        return 0;  // Invalid username or password
+        return 0;
     }
 
 

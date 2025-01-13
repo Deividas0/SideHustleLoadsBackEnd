@@ -203,8 +203,8 @@ public class ListingRepository {
 
             preparedStatement.setString(1, listing.getTitle());
             preparedStatement.setString(2, listing.getDescription());
-            preparedStatement.setString(3, listing.getPickUpCountry()); // Added pick_up_country
-            preparedStatement.setString(4, listing.getDeliveryCountry()); // Added delivery_country
+            preparedStatement.setString(3, listing.getPickUpCountry());
+            preparedStatement.setString(4, listing.getDeliveryCountry());
             preparedStatement.setString(5, listing.getPickUpLocation());
             preparedStatement.setString(6, listing.getDeliveryLocation());
             preparedStatement.setString(7, listing.getMustDeliverBefore());
@@ -244,7 +244,7 @@ public class ListingRepository {
                 return resultSet.getInt("total");
             }
         }
-        return 0; // Return 0 if no listings are found
+        return 0;
     }
 
 }
